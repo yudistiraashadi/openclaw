@@ -22,6 +22,7 @@ import {
   resolveChannelGroupRequireMention,
 } from "../config/group-policy.js";
 import { loadSessionStore, resolveStorePath } from "../config/sessions.js";
+import type { TelegramTopicConfig } from "../config/types.js";
 import { danger, logVerbose, shouldLogVerbose } from "../globals.js";
 import { formatUncaughtError } from "../infra/errors.js";
 import { getChildLogger } from "../logging.js";
@@ -311,10 +312,8 @@ export function createTelegramBot(opts: TelegramBotOptions) {
     const direct = telegramCfg.direct;
     const chatIdStr = String(chatId);
     const isDm = !chatIdStr.startsWith("-");
-    const resolveTopicConfig = <
-      TConfig extends { topics?: Record<string, { [key: string]: unknown }> | undefined },
-    >(
-      scopedConfig: TConfig | undefined,
+    const resolveTopicConfig = (
+      scopedConfig: { topics?: Record<string, TelegramTopicConfig> } | undefined,
       threadId?: number,
     ) =>
       threadId != null
